@@ -1,0 +1,44 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}{% if tarea %}Editar Tarea{% else %}Nueva Tarea{% endif %} - Solecito{% endblock %}
+
+{% block contenido %}
+    <div class="contenedor">
+        <a href="{% url 'panel_control' %}" class="volver">&larr; Volver al panel</a>
+
+        <h1>{% if tarea %}Editar Tarea{% else %}Nueva Tarea{% endif %}</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="campo">
+                <label>Clave</label>
+                <input type="text" name="clave" value="{% if tarea %}{{ tarea.clave }}{% endif %}" required>
+            </div>
+            <div class="campo">
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="{% if tarea %}{{ tarea.nombre }}{% endif %}" required>
+            </div>
+            <div class="campo">
+                <label>Descripción</label>
+                <textarea name="descripcion" required>{% if tarea %}{{ tarea.descripcion }}{% endif %}</textarea>
+            </div>
+            <div class="campo">
+                <label>Grado</label>
+                <select name="grado" required>
+                    {% for valor, etiqueta in grados %}
+                        <option value="{{ valor }}" {% if tarea.grado == valor %}selected{% endif %}>{{ etiqueta }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="campo">
+                <label>Docente</label>
+                <input type="text" name="docente" value="{% if tarea %}{{ tarea.docente }}{% endif %}" required>
+            </div>
+            <div class="campo">
+                <label>Fecha límite</label>
+                <input type="date" name="fecha_entrega" value="{% if tarea %}{{ tarea.fecha_entrega|date:'Y-m-d' }}{% endif %}" required>
+            </div>
+            <button type="submit">{% if tarea %}Guardar cambios{% else %}Crear tarea{% endif %}</button>
+        </form>
+    </div>
+{% endblock %}

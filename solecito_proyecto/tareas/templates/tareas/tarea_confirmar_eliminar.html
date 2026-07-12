@@ -1,0 +1,20 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}Eliminar Tarea - Solecito{% endblock %}
+
+{% block contenido %}
+    <div class="contenedor">
+        <a href="{% url 'panel_control' %}" class="volver">&larr; Volver al panel</a>
+
+        <h1>Eliminar Tarea</h1>
+        <p class="subtitulo">¿Seguro que quieres eliminar la tarea <strong>{{ tarea.nombre }}</strong> (clave {{ tarea.clave }})? Esta acción no se puede deshacer.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="acciones">
+                <button type="submit" class="btn-mini btn-eliminar">Sí, eliminar</button>
+                <a href="{% url 'panel_control' %}" class="btn-mini btn-editar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}{{ tarea.nombre }} - Solecito{% endblock %}
+
+{% block contenido %}
+    <div class="contenedor">
+        <a href="/" class="volver">&larr; Volver al portal de tareas</a>
+
+        <div class="tarjeta-detalle">
+            <div class="tarjeta-top">
+                <span class="clave">Clave: {{ tarea.clave }}</span>
+                <span class="urgente {{ urgencia }}">
+                    {% if urgencia == 'rojo' %}Urgente
+                    {% elif urgencia == 'amarillo' %}Próxima
+                    {% else %}A tiempo
+                    {% endif %}
+                </span>
+            </div>
+
+            <h1>{{ tarea.nombre }}</h1>
+            <div class="meta">
+                Docente: {{ tarea.docente }} &nbsp;|&nbsp;
+                Grado: {{ tarea.get_grado_display }} &nbsp;|&nbsp;
+                Fecha límite: {{ tarea.fecha_entrega }}
+            </div>
+
+            <div class="descripcion">
+                {{ tarea.descripcion }}
+            </div>
+
+            <div class="enterado">
+                <label>
+                    <input type="checkbox"> Confirmo que mi hij@ está enterad@ de esta tarea
+                </label>
+            </div>
+        </div>
+    </div>
+{% endblock %}

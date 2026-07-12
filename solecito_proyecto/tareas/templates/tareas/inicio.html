@@ -1,0 +1,51 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}Solecito - Portal de Tareas{% endblock %}
+
+{% block topbar_extra %}
+    <div class="grados">
+        <a href="/" class="grado-btn {% if not grado_seleccionado %}activo{% endif %}">Todos</a>
+        <a href="/?grado=1" class="grado-btn {% if grado_seleccionado == '1' %}activo{% endif %}">1° Grado</a>
+        <a href="/?grado=2" class="grado-btn {% if grado_seleccionado == '2' %}activo{% endif %}">2° Grado</a>
+        <a href="/?grado=3" class="grado-btn {% if grado_seleccionado == '3' %}activo{% endif %}">3° Grado</a>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="layout">
+        <div class="sidebar">
+            <a href="{% url 'inicio' %}" class="activo">Inicio</a>
+            <a href="{% url 'formulario_dudas' %}">Formulario Contacto</a>
+            <a href="{% url 'blog_dudas' %}">Blog Dudas</a>
+            <a href="{% url 'acerca' %}">Acerca de</a>
+            <a href="{% url 'login_docente' %}">Login Docente</a>
+        </div>
+
+        <div class="contenido">
+            <h1>Portal de Tareas - Actividades Pendientes del Día</h1>
+
+            {% if tareas %}
+                {% for t in tareas %}
+                    <div class="tarjeta">
+                        <div class="tarjeta-top">
+                            <span class="clave">Clave: {{ t.obj.clave }}</span>
+                            <span class="urgente {{ t.urgencia }}">
+                                {% if t.urgencia == 'rojo' %}Urgente
+                                {% elif t.urgencia == 'amarillo' %}Próxima
+                                {% else %}A tiempo
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="tarea-nombre">{{ t.obj.nombre }}</div>
+                        <div class="tarea-meta">
+                            Docente: {{ t.obj.docente }} &nbsp;|&nbsp; Fecha límite: {{ t.obj.fecha_entrega }}
+                        </div>
+                        <a href="{% url 'detalle' t.obj.id %}" style="color:#F17E3B; font-size:13px; font-weight:600; text-decoration:none;">Ver más &rarr;</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="vacio">No hay tareas registradas para este grado.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

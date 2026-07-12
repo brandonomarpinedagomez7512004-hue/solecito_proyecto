@@ -1,0 +1,47 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}Panel de Control Docente - Solecito{% endblock %}
+
+{% block topbar_extra %}
+    <a href="{% url 'logout_docente' %}" class="volver">Cerrar sesión</a>
+{% endblock %}
+
+{% block contenido %}
+    <div class="layout">
+        <div class="sidebar">
+            <a href="{% url 'inicio' %}">Inicio</a>
+            <a href="{% url 'formulario_dudas' %}">Formulario Contacto</a>
+            <a href="{% url 'blog_dudas' %}">Blog Dudas</a>
+            <a href="{% url 'acerca' %}">Acerca de</a>
+            <a href="{% url 'panel_control' %}" class="activo">Panel Docente</a>
+        </div>
+
+        <div class="contenido">
+            <h1>Panel de Control Docente</h1>
+
+            <a href="{% url 'tarea_crear' %}" class="btn-nueva">+ Nueva tarea</a>
+
+            {% if tareas %}
+                {% for tarea in tareas %}
+                    <div class="tarjeta">
+                        <div class="tarjeta-top">
+                            <span class="clave">Clave: {{ tarea.clave }}</span>
+                        </div>
+                        <div class="tarea-nombre">{{ tarea.nombre }}</div>
+                        <div class="tarea-meta">
+                            Grado: {{ tarea.get_grado_display }} &nbsp;|&nbsp;
+                            Docente: {{ tarea.docente }} &nbsp;|&nbsp;
+                            Fecha límite: {{ tarea.fecha_entrega }}
+                        </div>
+                        <div class="acciones">
+                            <a href="{% url 'tarea_editar' tarea.id %}" class="btn-mini btn-editar">Editar</a>
+                            <a href="{% url 'tarea_eliminar' tarea.id %}" class="btn-mini btn-eliminar">Eliminar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="vacio">No hay tareas registradas todavía.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

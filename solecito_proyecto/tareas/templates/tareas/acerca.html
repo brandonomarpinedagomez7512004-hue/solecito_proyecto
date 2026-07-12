@@ -1,0 +1,32 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}Acerca de - Solecito{% endblock %}
+
+{% block contenido %}
+    <div class="layout">
+        <div class="sidebar">
+            <a href="{% url 'inicio' %}">Inicio</a>
+            <a href="{% url 'formulario_dudas' %}">Formulario Contacto</a>
+            <a href="{% url 'blog_dudas' %}">Blog Dudas</a>
+            <a href="{% url 'acerca' %}" class="activo">Acerca de</a>
+            <a href="{% url 'login_docente' %}">Login Docente</a>
+        </div>
+
+        <div class="contenido">
+            <h1>Acerca de Solecito</h1>
+
+            <div class="tarjeta-detalle">
+                <p class="info-bloque">
+                    Solecito es el portal de tareas del Jardín de Niños Solecito, pensado para que los papás
+                    consulten fácilmente las actividades pendientes de sus hijos por grado, y para que los
+                    docentes den de alta, editen y eliminen tareas desde un panel propio.
+                </p>
+                <p class="info-bloque">
+                    <strong>Dirección:</strong> Morelia, Michoacán, México<br>
+                    <strong>Horario de atención:</strong> Lunes a viernes, 8:00 a 14:00 hrs<br>
+                    <strong>Contacto:</strong> usa el formulario de contacto para escribirnos.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

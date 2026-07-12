@@ -1,0 +1,35 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}Formulario de Dudas - Solecito{% endblock %}
+
+{% block contenido %}
+    <div class="contenedor">
+        <a href="/" class="volver">&larr; Volver al portal de tareas</a>
+
+        {% if enviado %}
+            <div class="exito">
+                ¡Gracias! Tu duda fue enviada correctamente, en breve te responderemos.
+            </div>
+        {% else %}
+            <h1>Formulario de Dudas</h1>
+            <p class="subtitulo">¿Tienes alguna pregunta sobre una tarea? Escríbenos.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="campo">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="campo">
+                    <label>Correo electrónico</label>
+                    <input type="email" name="correo" required>
+                </div>
+                <div class="campo">
+                    <label>Tu duda</label>
+                    <textarea name="mensaje" required></textarea>
+                </div>
+                <button type="submit">Enviar</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

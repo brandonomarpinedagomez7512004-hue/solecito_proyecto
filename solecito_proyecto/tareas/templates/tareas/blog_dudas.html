@@ -1,0 +1,32 @@
+{% extends 'tareas/base.html' %}
+
+{% block titulo %}Blog de Dudas - Solecito{% endblock %}
+
+{% block contenido %}
+    <div class="layout">
+        <div class="sidebar">
+            <a href="{% url 'inicio' %}">Inicio</a>
+            <a href="{% url 'formulario_dudas' %}">Formulario Contacto</a>
+            <a href="{% url 'blog_dudas' %}" class="activo">Blog Dudas</a>
+            <a href="{% url 'acerca' %}">Acerca de</a>
+            <a href="{% url 'login_docente' %}">Login Docente</a>
+        </div>
+
+        <div class="contenido">
+            <h1>Blog de Dudas</h1>
+            <p class="subtitulo">Preguntas frecuentes de otros papás, ya respondidas por el jardín.</p>
+
+            {% if dudas %}
+                {% for duda in dudas %}
+                    <div class="tarjeta">
+                        <div class="pregunta-blog">{{ duda.mensaje }}</div>
+                        <div class="tarea-meta">Pregunta de {{ duda.nombre }} &nbsp;|&nbsp; {{ duda.created|date:"d/m/Y" }}</div>
+                        <div class="respuesta-blog">{{ duda.respuesta }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="vacio">Todavía no hay dudas respondidas publicadas.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
