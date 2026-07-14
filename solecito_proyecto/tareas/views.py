@@ -80,6 +80,9 @@ def formulario_dudas(request):
     context = {'enviado': enviado}
     return render(request, 'tareas/formulario_dudas.html', context)
 
+# Vista de login para docentes (separada del admin de Django).
+# Revisa usuario y contraseña contra la base de datos y, si son
+# correctos, abre sesión y manda al panel de control.
 
 def login_docente(request):
     error = None
@@ -98,17 +101,22 @@ def login_docente(request):
     return render(request, 'tareas/login.html', {'error': error})
 
 
+# Cierra la sesión del docente.
 def logout_docente(request):
     logout(request)
     return redirect('inicio')
 
-
+# Panel del docente: lista todas las tareas.
+# @login_required hace que si no has iniciado sesión, te mande al login.
 @login_required(login_url='login_docente')
 def panel_control(request):
     tareas = Tarea.objects.all().order_by('fecha_entrega')
     return render(request, 'tareas/panel_control.html', {'tareas': tareas})
 
 
+# Crea una tarea nueva a partir del formulario.
+# Si es GET, solo muestra el formulario vacío.
+# Si es POST, guarda los datos en la base de datos y regresa al panel.
 @login_required(login_url='login_docente')
 def tarea_crear(request):
     if request.method == 'POST':
@@ -126,6 +134,9 @@ def tarea_crear(request):
     return render(request, 'tareas/tarea_form.html', context)
 
 
+# Edita una tarea existente (se busca por su id).
+# Si es GET, muestra el formulario con los datos actuales.
+# Si es POST, sobreescribe esos datos y guarda los cambios.
 @login_required(login_url='login_docente')
 def tarea_editar(request, tarea_id):
     tarea = get_object_or_404(Tarea, id=tarea_id)
@@ -144,6 +155,9 @@ def tarea_editar(request, tarea_id):
     return render(request, 'tareas/tarea_form.html', context)
 
 
+# Elimina una tarea, pero primero pide confirmación.
+# GET = muestra la pantalla de "¿seguro?"
+# POST = ya confirmado, se borra de verdad.
 @login_required(login_url='login_docente')
 def tarea_eliminar(request, tarea_id):
     tarea = get_object_or_404(Tarea, id=tarea_id)
@@ -155,10 +169,13 @@ def tarea_eliminar(request, tarea_id):
     return render(request, 'tareas/tarea_confirmar_eliminar.html', {'tarea': tarea})
 
 
+# Blog público de dudas ya respondidas.
+# Solo muestra las dudas donde el campo "respuesta" no está vacío.
 def blog_dudas(request):
     dudas = Duda.objects.exclude(respuesta__isnull=True).exclude(respuesta='').order_by('-created')
     return render(request, 'tareas/blog_dudas.html', {'dudas': dudas})
 
 
+# Página estática con información de contacto del jardín.
 def acerca(request):
     return render(request, 'tareas/acerca.html')

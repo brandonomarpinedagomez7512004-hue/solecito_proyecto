@@ -27,6 +27,8 @@ class Duda(models.Model):
     nombre = models.CharField(max_length=100)
     correo = models.EmailField()
     mensaje = models.TextField()
+    # Respuesta que el docente escribe desde el admin.
+    # Si está vacía, la duda no aparece en el blog público.
     respuesta = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 

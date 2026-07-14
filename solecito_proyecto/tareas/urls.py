@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+# Aquí se conecta cada dirección web (URL) con su función en views.py
 urlpatterns = [
     path('', views.inicio, name='inicio'),
     path('tarea/<int:tarea_id>/', views.detalle, name='detalle'),

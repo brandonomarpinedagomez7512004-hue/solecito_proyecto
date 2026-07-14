@@ -19,6 +19,8 @@ class DudaAdmin(admin.ModelAdmin):
     date_hierarchy = 'created'
     list_per_page = 10
 
+# Muestra una palomita/tache en la lista del admin
+    # según si la duda ya tiene respuesta o no.
     def respondida(self, obj):
         return bool(obj.respuesta)
     respondida.boolean = True
