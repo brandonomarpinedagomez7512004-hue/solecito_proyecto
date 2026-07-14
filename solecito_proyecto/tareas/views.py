@@ -7,7 +7,9 @@ from .models import Tarea, Duda
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 def inicio(request):
+    # Obtiene el grado seleccionado desde la URL para filtrar las tareas
     grado_seleccionado = request.GET.get('grado')
 
     if grado_seleccionado:
@@ -23,6 +25,7 @@ def inicio(request):
     for tarea in tareas_qs:
         dias_restantes = (tarea.fecha_entrega - hoy).days
 
+        # Asigna un color según la cercanía de la fecha de entrega
         if dias_restantes <= 1:
             urgencia = 'rojo'
         elif dias_restantes <= 4:
@@ -42,7 +45,9 @@ def inicio(request):
     }
     return render(request, 'tareas/inicio.html', context)
 
+
 def detalle(request, tarea_id):
+    # Busca la tarea por su id o muestra error 404 si no existe
     tarea = get_object_or_404(Tarea, id=tarea_id)
 
     hoy = timezone.now().date()
@@ -62,6 +67,7 @@ def detalle(request, tarea_id):
     }
     return render(request, 'tareas/detalle.html', context)
 
+
 def formulario_dudas(request):
     enviado = False
 
@@ -70,6 +76,7 @@ def formulario_dudas(request):
         correo = request.POST.get('correo')
         mensaje = request.POST.get('mensaje')
 
+        # Guarda la duda enviada por el usuario
         Duda.objects.create(
             nombre=nombre,
             correo=correo,
@@ -92,6 +99,7 @@ def login_docente(request):
         contrasena = request.POST.get('contrasena')
         user = authenticate(request, username=usuario, password=contrasena)
 
+        # Verifica las credenciales del docente
         if user is not None:
             login(request, user)
             return redirect('panel_control')
@@ -108,6 +116,8 @@ def logout_docente(request):
 
 # Panel del docente: lista todas las tareas.
 # @login_required hace que si no has iniciado sesión, te mande al login.
+
+# Solo usuarios autenticados pueden acceder al panel
 @login_required(login_url='login_docente')
 def panel_control(request):
     tareas = Tarea.objects.all().order_by('fecha_entrega')
@@ -120,6 +130,7 @@ def panel_control(request):
 @login_required(login_url='login_docente')
 def tarea_crear(request):
     if request.method == 'POST':
+        # Crea una nueva tarea con los datos del formulario
         Tarea.objects.create(
             clave=request.POST.get('clave'),
             nombre=request.POST.get('nombre'),
@@ -142,6 +153,7 @@ def tarea_editar(request, tarea_id):
     tarea = get_object_or_404(Tarea, id=tarea_id)
 
     if request.method == 'POST':
+        # Actualiza la información de la tarea seleccionada
         tarea.clave = request.POST.get('clave')
         tarea.nombre = request.POST.get('nombre')
         tarea.descripcion = request.POST.get('descripcion')
@@ -163,6 +175,7 @@ def tarea_eliminar(request, tarea_id):
     tarea = get_object_or_404(Tarea, id=tarea_id)
 
     if request.method == 'POST':
+        # Elimina la tarea de la base de datos
         tarea.delete()
         return redirect('panel_control')
 
@@ -172,6 +185,7 @@ def tarea_eliminar(request, tarea_id):
 # Blog público de dudas ya respondidas.
 # Solo muestra las dudas donde el campo "respuesta" no está vacío.
 def blog_dudas(request):
+    # Muestra únicamente las dudas que ya tienen respuesta
     dudas = Duda.objects.exclude(respuesta__isnull=True).exclude(respuesta='').order_by('-created')
     return render(request, 'tareas/blog_dudas.html', {'dudas': dudas})
 
