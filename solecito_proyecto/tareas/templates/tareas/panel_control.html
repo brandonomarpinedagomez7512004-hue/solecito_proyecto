@@ -1,38 +1,60 @@
 {% extends 'tareas/base.html' %}
+{# Esta plantilla extiende el layout base compartido de la app 'tareas' #}
 
 {% block titulo %}Panel de Control Docente - Solecito{% endblock %}
 
 {% block topbar_extra %}
+    {# Botón para cerrar sesión del docente, visible en la barra superior #}
     <a href="{% url 'logout_docente' %}" class="volver">Cerrar sesión</a>
 {% endblock %}
 
 {% block contenido %}
     <div class="layout">
+        {# Barra lateral de navegación con los accesos principales del sistema #}
         <div class="sidebar">
             <a href="{% url 'inicio' %}">Inicio</a>
             <a href="{% url 'formulario_dudas' %}">Formulario Contacto</a>
             <a href="{% url 'blog_dudas' %}">Blog Dudas</a>
             <a href="{% url 'acerca' %}">Acerca de</a>
+            {# Enlace activo, marca la sección actual: Panel Docente #}
             <a href="{% url 'panel_control' %}" class="activo">Panel Docente</a>
         </div>
 
+        {# Contenedor principal del contenido del panel docente #}
         <div class="contenido">
             <h1>Panel de Control Docente</h1>
 
+            {# Botón para crear una nueva tarea #}
             <a href="{% url 'tarea_crear' %}" class="btn-nueva">+ Nueva tarea</a>
 
+            {# Muestra el total de tareas registradas en el sistema #}
             {% if tareas %}
+                <p class="total-tareas">Total de tareas registradas: {{ tareas|length }}</p>
+            {% endif %}
+
+            {# Verifica si existen tareas registradas antes de mostrarlas #}
+            {% if tareas %}
+                {# Recorre cada tarea del contexto y genera una tarjeta por cada una #}
                 {% for tarea in tareas %}
                     <div class="tarjeta">
                         <div class="tarjeta-top">
+                            {# Clave única que identifica la tarea #}
                             <span class="clave">Clave: {{ tarea.clave }}</span>
+                            {# Indica si la fecha límite ya pasó, comparando con la fecha actual #}
+                            {% now "Y-m-d" as hoy %}
+                            {% if tarea.fecha_entrega|date:"Y-m-d" < hoy %}
+                                <span class="badge-vencida">Vencida</span>
+                            {% endif %}
                         </div>
+                        {# Nombre de la tarea #}
                         <div class="tarea-nombre">{{ tarea.nombre }}</div>
+                        {# Información adicional: grado, docente asignado y fecha límite #}
                         <div class="tarea-meta">
                             Grado: {{ tarea.get_grado_display }} &nbsp;|&nbsp;
                             Docente: {{ tarea.docente }} &nbsp;|&nbsp;
                             Fecha límite: {{ tarea.fecha_entrega }}
                         </div>
+                        {# Acciones disponibles sobre la tarea: editar o eliminar #}
                         <div class="acciones">
                             <a href="{% url 'tarea_editar' tarea.id %}" class="btn-mini btn-editar">Editar</a>
                             <a href="{% url 'tarea_eliminar' tarea.id %}" class="btn-mini btn-eliminar">Eliminar</a>
@@ -40,6 +62,7 @@
                     </div>
                 {% endfor %}
             {% else %}
+                {# Mensaje que se muestra cuando no hay tareas registradas #}
                 <p class="vacio">No hay tareas registradas todavía.</p>
             {% endif %}
         </div>
